@@ -21,8 +21,7 @@ var gameInstanceSchema = mongoose.schema({
 });
 
 var userSchema = mongoose.schema({
-	id: Number,
-	username: String
+	username: {type: String, unique: true }
 });
 
 module.exports.gameInstanceModel = mongoose.model('gameInstanceModel', gameInstanceSchema);
