@@ -12,8 +12,9 @@ class App extends React.Component {
 		}
 	}
 
+
 	componentDidMount() {
-		this.promptUsername;
+		this.promptUsername();
 	}
 
 	promptUsername() {
