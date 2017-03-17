@@ -3,6 +3,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
+import ChooseUsername from './components/ChooseUsername.jsx';
 
 class App extends React.Component {
 	constructor(props){
@@ -10,16 +11,15 @@ class App extends React.Component {
 		this.state = {
 
 		}
+
+		this.postUsername = this.postUsername.bind(this);
 	}
 
 
 	componentDidMount() {
-		this.promptUsername();
 	}
 
-	promptUsername() {
-		var username = prompt('What is your username?');
-
+	postUsername(username) {
 		$.ajax({
 			url: 'http://localhost:3000/users',
 			method: 'POST',
@@ -36,7 +36,10 @@ class App extends React.Component {
 
 	render() {
 		return (
-			<h1>Oranges To Oranges</h1>
+			<div>
+				<h1>Oranges To Oranges</h1>
+				<ChooseUsername onClick={this.postUsername}/>
+			</div>
 		);
 	}
 }
