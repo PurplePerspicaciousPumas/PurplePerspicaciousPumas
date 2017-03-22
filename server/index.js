@@ -59,6 +59,16 @@ app.get('/games', function(req, res) {
   promise.then(function(games) {
     res.json(games);
   })
+});
+
+app.get('/game', function(req, res) {
+  var name = req.query.name;
+  var promise = Game.find({gameName: name}).exec();
+
+  promise.then(function(game) {
+    res.json(game);
+  })
+  //var promise = Game.find({})
 })
 // app.post('/users', function (req, res) {
 //   var username = req.body.username;

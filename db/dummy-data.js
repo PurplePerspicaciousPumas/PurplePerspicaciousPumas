@@ -5,7 +5,7 @@ var gameInstance = models.gameInstanceModel;
 module.exports.gameOne = {
 	gameName: 'Puma',
 	password: '',
-	players: [],
+	players: ['Edward K. Chan'],
 	rounds: [
 	{prompt: 'prompt 1', responses: [], winner: '', stage: 0}, 
 	{prompt: 'prompt 2', responses: [], winner: '', stage: 0}, 

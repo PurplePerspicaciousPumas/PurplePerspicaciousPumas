@@ -20,7 +20,8 @@ var gameInstanceSchema = new Schema({
   password: String,
   players: Array, 
   rounds: Array, 
-  currentRound: Number
+  currentRound: Number,
+  gameStage: {type: String, default: 'waiting'}
 });
 
 var userSchema = new Schema({
