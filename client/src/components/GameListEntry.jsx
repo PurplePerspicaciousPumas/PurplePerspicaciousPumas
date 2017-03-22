@@ -1,7 +1,7 @@
 import React from 'react';
 
 const GameListEntry = (props) => (
-  <li>{props.name}</li>
+  <li onClick={() => props.onClick(props.gameInfo)}>{props.name}</li>
 )
 
 

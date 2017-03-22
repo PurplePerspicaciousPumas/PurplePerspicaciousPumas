@@ -37,7 +37,7 @@ class Lobby extends React.Component {
       <div id="lobby">
         <h3>Lobby</h3>
         <h4>Games:</h4>
-        {this.state.games && <GameList games={this.state.games}/>}
+        {this.state.games && <GameList games={this.state.games} onClick={this.props.route.sendToGame}/>}
       </div>
     )
   }

@@ -5,6 +5,7 @@ import SignUp from './components/SignUp.jsx';
 import { Router, Route, browserHistory } from 'react-router';
 import Lobby from './components/Lobby.jsx';
 import Home from './components/Home.jsx';
+import Game from './components/Game.jsx';
 // import io from 'socket.io-client';
 
 class App extends React.Component {
@@ -14,6 +15,7 @@ class App extends React.Component {
 
       this.handleSignUp = this.handleSignUp.bind(this);
       this.handleLogIn = this.handleLogIn.bind(this);
+      this.sendToGame = this.sendToGame.bind(this);
     }
 
     handleSignUp(email, username, password) {
@@ -51,12 +53,19 @@ class App extends React.Component {
       });
     }
 
+    sendToGame(gameObj) {
+      console.log(gameObj);
+      var name = gameObj.gameName;
+      browserHistory.push(/game/ + name);
+    }
+
     render() {
       return (
         <div>
           <Router history={browserHistory}>
             <Route path="/" component={Home} onSignUp={this.handleSignUp} onLogIn={this.handleLogIn}/>
-            <Route path="/lobby" component={Lobby} />
+            <Route path="/lobby" component={Lobby} sendToGame={this.sendToGame}/>
+            <Route path="/game/:gamename" component={Game} />
           </Router>
         </div>
       );
