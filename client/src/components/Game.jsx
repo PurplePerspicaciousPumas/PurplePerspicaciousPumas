@@ -1,6 +1,6 @@
 import React from 'react';
 import WaitingRoom from './WaitingRoom.jsx';
-
+import EndedGame from './EndedGame.jsx';
 import PlayingGame from './PlayingGame.jsx';
 import $ from 'jquery';
 
