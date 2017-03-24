@@ -124,7 +124,7 @@ module.exports.PurplePumaPlayingR1S2 = {
 	password: '',
 	players: ['Edward K. Chan', 'John Taylor', 'Sarah Peterson', 'Jenny Turner'],
 	rounds: [
-	{prompt: 'prompt 1', responses: [['Response 1 John', 'John Taylor'], ['Response 1 Sarah', 'Sarah Peterson'], ['Response 1 Jenny', 'Jenny Turner']], winner: 'Sarah Peterson', stage: 2, ready: []}, 
+	{prompt: 'prompt 1', responses: [['Response 1 John', 'John Taylor'], ['Response 1 Sarah', 'Sarah Peterson'], ['Response 1 Jenny', 'Jenny Turner']], winner: 'Sarah Peterson', stage: 2, ready: ['Edward K. Chan', 'Sarah Peterson', 'Jenny Turner']}, 
 	{prompt: 'prompt 2', responses: [['Response 2 Edward', 'Edward K. Chan'], ['Response 2 Sarah', 'Sarah Peterson'], ['Response 2 Jenny', 'Jenny Turner']], winner: 'Jenny Turner', stage: 2, ready: []}, 
 	{prompt: 'prompt 3', responses: [], winner: '', stage: 0, ready: []}, 
 	{prompt: 'prompt 4', responses: [], winner: '', stage: 0, ready: []}],

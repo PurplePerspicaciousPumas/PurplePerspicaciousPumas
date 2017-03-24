@@ -17,5 +17,10 @@ module.exports.setGameInstanceGameStageToPlaying = function(gameName) {
 
 module.exports.updateRounds = function(gameName, roundsArray) {
 
-  return games.update({gameName: gameName}, {  $set: {rounds: roundsArray} });
+  return games.update({gameName: gameName}, { $set: {rounds: roundsArray} });
 };
+
+module.exports.updateCurrentRound = function(gameName, round) {
+
+  return games.update({gameName: gameName}, { $set: {currentRound: round} });
+}

@@ -4,7 +4,6 @@ import PlayingGame from './PlayingGame.jsx';
 import $ from 'jquery';
 import io from 'socket.io-client';
 const socket = io();
-const context = this;
 
 class Game extends React.Component {
   constructor(props) {
@@ -18,21 +17,22 @@ class Game extends React.Component {
     this.getUsername = this.getUsername.bind(this);
     this.handleResponse = this.handleResponse.bind(this);
     this.handleJudgeSelection = this.handleJudgeSelection.bind(this);
+    this.handleReadyToMoveOn = this.handleReadyToMoveOn.bind(this);
 
     socket.on('start game', (gameObj) => {
-      context.setState({game: gameObj});
+      this.setState({game: gameObj});
     })
     socket.on('start judging', (gameObj) => {
-      context.setState({game: gameObj});
+      this.setState({game: gameObj});
     })
     socket.on('winner chosen', (gameObj) => {
-      context.setState({game: gameObj});
+      this.setState({game: gameObj});
     })
     socket.on('start next round', (gameObj) => {
-      context.setState({game: gameObj});
+      this.setState({game: gameObj});
     })
     socket.on('game over', (gameObj) => {
-      context.setState({game: gameObj});
+      this.setState({game: gameObj});
     })
 
   }
@@ -98,8 +98,11 @@ class Game extends React.Component {
   }
 
   handleJudgeSelection(winner) {
-    console.log(winner);
     socket.emit('judge selection', {gameName: this.props.params.gamename, winner: winner});
+  }
+
+  handleReadyToMoveOn() {
+    socket.emit('ready to move on', {gameName: this.props.params.gamename, username: this.state.username});
   }
 
   render() {
@@ -108,7 +111,7 @@ class Game extends React.Component {
         <h4>Game!</h4>
         {this.props.params.gamename}
         {this.state.game && this.state.game.gameStage === 'waiting' && <WaitingRoom numPlayers={this.state.game.players.length} players={this.state.game.players}/>}
-        {this.state.game && this.state.username && this.state.game.gameStage === 'playing' && <PlayingGame game={this.state.game} user={this.state.username} handleResponse={this.handleResponse} handleJudgeSelection={this.handleJudgeSelection}/>}
+        {this.state.game && this.state.username && this.state.game.gameStage === 'playing' && <PlayingGame game={this.state.game} user={this.state.username} handleResponse={this.handleResponse} handleJudgeSelection={this.handleJudgeSelection} handleReadyToMoveOn={this.handleReadyToMoveOn}/>}
       </div>
     )
   }

@@ -215,6 +215,34 @@ io.on('connection', (socket) => {
       // if not, add it to ready array 
       // if there are now 4 ready, increment currentRound by 1 
       // emit 'start next round' with game instance obj
+  socket.on('ready to move on', (data) => {
+    let gameName = data.gameName;
+    let username = data.username;
+    queries.retrieveGameInstance(gameName)
+    .then(function(game) {
+      let currentRound = game.currentRound;
+      let Rounds = game.rounds.slice(0);
+      if (!Rounds[currentRound].ready.includes(username)) {
+        Rounds[currentRound].ready.push(username);
+        queries.updateRounds(gameName, Rounds)
+        .then(function() {
+          if (Rounds[currentRound].ready.length === 4) {
+            currentRound++;
+          }
+          queries.updateCurrentRound(gameName, currentRound)
+          .then(function() {
+            queries.retrieveGameInstance(gameName)
+            .then(function(game) {
+              io.to(gameName).emit('start next round', game);
+            })
+          })
+        })
+      }
+    }).catch(function(error) {
+      console.log(error);
+      throw error;
+    })
+  })
 
 
   socket.on('disconnect', () => {
