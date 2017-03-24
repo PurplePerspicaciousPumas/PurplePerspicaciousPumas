@@ -1,6 +1,7 @@
 import React from 'react';
 import GameList from './GameList.jsx';
 import $ from 'jquery';
+import CreateGame from './CreateGame.jsx';
 
 //TODO:
   // build logic to prevent users from joining a full game
@@ -9,7 +10,8 @@ class Lobby extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      games: null
+      games: null,
+      username: null
     }
     this.getGames = this.getGames.bind(this);
   }
@@ -40,7 +42,8 @@ class Lobby extends React.Component {
       <div id="lobby">
         <h3>Lobby</h3>
         <h4>Games:</h4>
-        {this.state.games && <GameList games={this.state.games} onClick={this.props.route.sendToGame}/>}
+        {this.state.games && <GameList games={this.state.games} sendToGame={this.props.route.sendToGame}/>}
+        <CreateGame sendToGame={this.props.route.sendToGame}/>
       </div>
     )
   }

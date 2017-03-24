@@ -53,10 +53,9 @@ class App extends React.Component {
       });
     }
 
-    sendToGame(gameObj) {
-      console.log(gameObj);
-      var name = gameObj.gameName;
-      hashHistory.push(/game/ + name);
+    sendToGame(gameName) {
+      console.log(gameName);
+      hashHistory.push(/game/ + gameName);
     }
 
     render() {

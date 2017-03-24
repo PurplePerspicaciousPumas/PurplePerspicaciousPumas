@@ -63,6 +63,16 @@ app.get('/games', function(req, res) {
   })
 });
 
+app.post('/games', function(req, res) {
+  Game.create(req.body, function(err) {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      res.status(201).send('success creating game in db');
+    }
+  })
+})
+
 app.get('/game', function(req, res) {
   var name = req.query.name;
   var promise = Game.find({gameName: name}).exec();
