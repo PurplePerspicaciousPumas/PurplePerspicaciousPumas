@@ -1,6 +1,7 @@
 import React from 'react';
 import WaitingRoom from './WaitingRoom.jsx';
 import PlayingGame from './PlayingGame.jsx';
+import EndedGame from './EndedGame.jsx';
 import $ from 'jquery';
 import io from 'socket.io-client';
 const socket = io();
@@ -115,6 +116,7 @@ class Game extends React.Component {
         {this.props.params.gamename}
         {this.state.game && this.state.username && this.state.game.gameStage === 'waiting' && <WaitingRoom players={this.state.game.players} user={this.state.username}/>}
         {this.state.game && this.state.username && this.state.game.gameStage === 'playing' && <PlayingGame game={this.state.game} user={this.state.username} handleResponse={this.handleResponse} handleJudgeSelection={this.handleJudgeSelection} handleReadyToMoveOn={this.handleReadyToMoveOn}/>}
+        {this.state.game && this.state.game.gameStage === 'end' && <EndedGame game={this.state.game} players={this.state.game.players}/>}
       </div>
     )
   }
