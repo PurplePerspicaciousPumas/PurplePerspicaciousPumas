@@ -121,3 +121,9 @@ class Game extends React.Component {
 }
 
 export default Game;
+
+
+//TODO:
+  // Add WaitingView component
+  // Add PlayingGameView component
+  // Add EndOfGameView component
