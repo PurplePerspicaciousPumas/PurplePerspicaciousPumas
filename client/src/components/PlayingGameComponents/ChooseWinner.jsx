@@ -1,4 +1,5 @@
 import React from 'react';
+import { ListGroup, ListGroupItem, Col } from 'react-bootstrap';
 
 class ChooseWinner extends React.Component {
   constructor(props) {
@@ -8,13 +9,17 @@ class ChooseWinner extends React.Component {
 
   render() {
     return (
-      <div id="choose-winner">
+      <ListGroup id="choose-winner">
+        <h4>Responses</h4>
         {this.props.responses.map((response) => (
-            <div onClick={this.props.handleJudgeSelection.bind(null, response[1])}> 
-              Response: {response[0]} 
-            </div>
+          <Col>
+            <ListGroupItem onClick={this.props.handleJudgeSelection.bind(null, response[1])}> 
+              {response[0]} 
+            </ListGroupItem>
+            <br />
+          </Col>
           ))}
-      </div>
+      </ListGroup>
     )
   }
 }
