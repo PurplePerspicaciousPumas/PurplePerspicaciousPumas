@@ -5,6 +5,10 @@ body {
 /*  display: flex;
 */}
 
+.jumbotron {
+	background-color: #ffad33;
+}
+
 #signup-header, #login-header, #lobby, #create-game, #game {
   text-align: center;
 }
