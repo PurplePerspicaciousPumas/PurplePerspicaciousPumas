@@ -5,10 +5,10 @@ const SeeResponses = (props) => (
   <ListGroup id="see-responses">
     <h4>Responses</h4>
   	{props.responses.map((response) => (
-  			<ListGroupItem id="response-item"> 
-  			 <b>{response[1]}:</b> {response[0]}
-  			</ListGroupItem>
-  		))}
+			<ListGroupItem id="response-item"> 
+			 <b>{response[1]}:</b> {response[0]}
+			</ListGroupItem>
+		))}
   </ListGroup>
 )
 
