@@ -54,15 +54,12 @@ class SignUp extends React.Component {
     const errorMessage = <p>That username is already taken. Please try again with a different username.</p>
 
     return (
-      <Col id="sign-up" sm={6}>
+      <Col id="sign-up">
         <h4 id="signup-header">Sign Up</h4>
         {this.state.error && errorMessage}
         <FormGroup>
           <Form horizontal>
-            <Col componentClass={ControlLabel} sm={2}>
-              Email
-            </Col>
-            <Col sm={10}>
+            <Col>
               <FormControl type="email" placeholder="Email" value={this.state.email} onChange={this.handleEmailChange} />
             </Col>
           </Form>
@@ -70,10 +67,7 @@ class SignUp extends React.Component {
 
         <FormGroup bsSize="small">
           <Form horizontal>
-            <Col componentClass={ControlLabel} sm={2}>
-              Username
-            </Col>
-            <Col sm={10}>
+            <Col>
               <FormControl type="username" placeholder="Username" value={this.state.username} onChange={this.handleUsernameChange} />
             </Col>
           </Form>
@@ -81,20 +75,20 @@ class SignUp extends React.Component {
 
         <FormGroup bsSize="small">
           <Form horizontal>
-            <Col componentClass={ControlLabel} sm={2}>
-              Password
-            </Col>
-            <Col sm={10}>
+            <Col>
               <FormControl type="password" placeholder="Password" value={this.state.password} onChange={this.handlePasswordChange} />
             </Col>
           </Form>
         </FormGroup>
 
       <FormGroup bsSize="small">
-        <Col smOffset={2} sm={10}>
+        <Col>
           <Button type="submit" onClick={() => this.handleSignUpAttempt(this.state.email, this.state.username, this.state.password)}>
-            Sign in
+            Sign Up
           </Button>
+          <br />
+          <br />
+          <br />
         </Col>
       </FormGroup>
     </Col>

@@ -50,38 +50,32 @@ class LogIn extends React.Component {
 
 
     return (
-      <Col id="log-in" sm={6}>
+      <Col id="log-in">
         <h4 id="login-header">Log In</h4>
         {this.state.error && errorMessage}
         <FormGroup bsSize="small">
           <Form horizontal>
-            <Col componentClass={ControlLabel} sm={2}>
-              Username
-            </Col>
-            <Col sm={10}>
+            <Col>
               <FormControl type="username" placeholder="Username" value={this.state.username} onChange={this.handleUsernameChange} />
             </Col>
           </Form>
         </FormGroup>
-
         <FormGroup bsSize="small">
           <Form horizontal>
-            <Col componentClass={ControlLabel} sm={2}>
-              Password
-            </Col>
-            <Col sm={10}>
+            <Col>
               <FormControl type="password" placeholder="Password" value={this.state.password} onChange={this.handlePasswordChange} />
             </Col>
           </Form>
         </FormGroup>
 
       <FormGroup bsSize="small">
-        <Col smOffset={2} sm={10}>
+        <Col>
           <Button type="submit" onClick={() => this.handleLogInAttempt(this.state.username, this.state.password)}>
             Log In
           </Button>
         </Col>
       </FormGroup>
+      <br />
     </Col>
 
     )
