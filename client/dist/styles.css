@@ -16,3 +16,7 @@ body {
 #prompt {
   font-size: 18px;
 }
+
+#response-item {
+  text-align: left;
+}

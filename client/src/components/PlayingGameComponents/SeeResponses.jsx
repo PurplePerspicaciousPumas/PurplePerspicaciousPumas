@@ -1,14 +1,18 @@
 import React from 'react';
+import { ListGroup, ListGroupItem, Col } from 'react-bootstrap';
 
 const SeeResponses = (props) => (
-  <div id="see-responses">
+  <ListGroup id="see-responses">
+    <h4>Responses</h4>
   	{props.responses.map((response) => (
-  			<div> 
-  				{response[0]} {response[1]} 
-  			</div>
+  			<ListGroupItem id="response-item"> 
+  			 <b>{response[1]}:</b> {response[0]}
+  			</ListGroupItem>
   		))}
-  </div>
+  </ListGroup>
 )
 
 
 export default SeeResponses
+
+// responsep1 is the person
