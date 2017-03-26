@@ -6,7 +6,7 @@ const SeeResponses = (props) => (
     <h4>Responses</h4>
   	{props.responses.map((response) => (
 			<ListGroupItem id="response-item"> 
-			 <b>{response[1]}:</b> {response[0]}
+			   <b>{response[1]}:</b> {response[0]}
 			</ListGroupItem>
 		))}
   </ListGroup>
