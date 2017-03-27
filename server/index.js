@@ -52,14 +52,14 @@ app.post('/signup', function (req, res) {
       return res.status(400).send(err);
     } 
     console.log('registered User');
-    passport.authenticate('local')(req, res, function() {
+    passport.authenticate('local', function(err){if (err){console.log(err)};})(req, res, function() {
       console.log('success', user);
       res.status(201).send('created');
     })
   });
 })
 
-app.post('/login', passport.authenticate('local'), function(req, res) {
+app.post('/login', passport.authenticate('local', function(err){if (err){console.log(err)};}), function(req, res) {
   console.log('in login request');
   res.status(201).send('success')
 })
