@@ -2,7 +2,7 @@
 // var configuration = require('.././webpack.config.js');
 
 // let compiler = webpack(configuration);
-// compiler.apply(new webpack.process.env());
+// compiler.apply(new webpack.DefinePlugin());
 // compiler.run(function(err, stats) {
 //   if (err) {
 //     console.log(err)

@@ -12,7 +12,7 @@ module.exports = {
   plugins: [
     new webpack.DefinePlugin({
       'process.env': {
-        NODE_ENV: JSON.stringify(nodeEnv),
+        LIVE_URL: process.env.LIVE_URL,
       }
     }),
   ],
