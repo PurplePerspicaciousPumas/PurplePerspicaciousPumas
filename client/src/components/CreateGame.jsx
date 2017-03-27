@@ -1,30 +1,36 @@
 import React from 'react';
 import $ from 'jquery';
-import { Button, Form, FormGroup, Col, FormControl, ControlLabel, PageHeader } from 'react-bootstrap';
+import { DropdownButton, MenuItem, Button, Form, FormGroup, Col, FormControl, ControlLabel, PageHeader } from 'react-bootstrap';
 
 class CreateGame extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      gameName: ''
+      gameName: '',
+      promptType: 'random'
     }
     this.handleChange = this.handleChange.bind(this);
+    this.addGameToDB = this.addGameToDB.bind(this);
+    this.handlePromptTypeSelection = this.handlePromptTypeSelection.bind(this);
   }
 
   handleChange(event) {
     this.setState({gameName: event.target.value});
   }
 
-  addGameToDB(gameName, callback) {
+  addGameToDB(gameName, promptType, callback) {
+
+    var initialStage = promptType === 'random' ? 0 : -1;
+
     var gameInstance = {
       gameName: gameName,
       password: '',
       players: [],
       rounds: [
-      {prompt: 'prompt 1', responses: [], winner: '', stage: 0, ready: []}, 
-      {prompt: 'prompt 2', responses: [], winner: '', stage: 0, ready: []}, 
-      {prompt: 'prompt 3', responses: [], winner: '', stage: 0, ready: []}, 
-      {prompt: 'prompt 4', responses: [], winner: '', stage: 0, ready: []}],
+      {prompt: 'prompt 1', responses: [], winner: '', stage: initialStage, ready: []}, 
+      {prompt: 'prompt 2', responses: [], winner: '', stage: initialStage, ready: []}, 
+      {prompt: 'prompt 3', responses: [], winner: '', stage: initialStage, ready: []}, 
+      {prompt: 'prompt 4', responses: [], winner: '', stage: initialStage, ready: []}],
       currentRound: 0
     }
 
@@ -42,33 +48,22 @@ class CreateGame extends React.Component {
     });
   }
 
+  handlePromptTypeSelection(promptType) {
+    this.setState({promptType: promptType})
+  }
+
   render() {
     return (
-      <div id="choose-username">
+      <div id="create-game">
         <h4>Start a New Game</h4>
           <input placeholder="Name your game..." type="text" value={this.state.gameName} onChange={this.handleChange} />
-          <button onClick={() => this.addGameToDB(this.state.gameName, this.props.sendToGame)}>Submit</button>
+          <DropdownButton bsSize="small" title='Prompt-Type' id='0'>
+            <MenuItem eventKey="1" onSelect={() => this.handlePromptTypeSelection('random')}>Random</MenuItem>
+            <MenuItem eventKey="2" onSelect={() => this.handlePromptTypeSelection('user-generated')}>User-generated</MenuItem>
+          </DropdownButton>
+          <Button bsSize="small" onClick={() => this.addGameToDB(this.state.gameName, this.state.promptType, this.props.sendToGame)}>Submit</Button>
       </div>
     )
-
-    // TODO: figure out the CreateGame component with React-Bootstrap (started below)
-    // return (
-    //   <div id="create-game">
-    //   <Form inline>
-    //     <FormGroup>
-    //       <Col sm={10}>
-    //         <FormControl type="name" placeholder="Name your game..." value={this.state.gameName} onChange={this.handleChange} />
-    //       </Col>
-    //     </FormGroup>
-    //     <Col sm={2}>
-    //       <Button type="submit" onClick={() => this.addGameToDB(this.state.gameName, this.props.sendToGame)}>
-    //         Create New Game
-    //       </Button>
-    //     </Col>
-    //   </Form>
-
-    //   </div>
-    // )
   }
 }
 export default CreateGame;

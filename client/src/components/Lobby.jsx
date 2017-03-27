@@ -3,6 +3,7 @@ import GameList from './GameList.jsx';
 import $ from 'jquery';
 import CreateGame from './CreateGame.jsx';
 import YourGames from './YourGames.jsx';
+import PlayerDisconnected from './PlayerDisconnected.jsx'
 import { Button, Form, FormGroup, Col, FormControl, ControlLabel, PageHeader } from 'react-bootstrap';
 
 
@@ -60,6 +61,7 @@ class Lobby extends React.Component {
 
       <Col id="lobby" sm={6} smOffset={3}>
         <PageHeader>Lobby</PageHeader>
+        {this.props.params.disconnectTimeOut && <PlayerDisconnected/>}
         <CreateGame sendToGame={this.props.route.sendToGame}/>
         {this.state.games && <YourGames games={this.state.games} username={this.state.username} sendToGame={this.props.route.sendToGame}/>}
         <h4>Current Games:</h4>

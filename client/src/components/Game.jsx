@@ -19,6 +19,7 @@ class Game extends React.Component {
     this.getGameData = this.getGameData.bind(this);
     this.getUsername = this.getUsername.bind(this);
     this.handleResponse = this.handleResponse.bind(this);
+    this.handlePromptSubmission = this.handlePromptSubmission.bind(this);
     this.handleJudgeSelection = this.handleJudgeSelection.bind(this);
     this.handleReadyToMoveOn = this.handleReadyToMoveOn.bind(this);
 
@@ -39,6 +40,10 @@ class Game extends React.Component {
     })
     socket.on('game over', (gameObj) => {
       this.setState({game: gameObj});
+    })
+    socket.on('disconnectTimeOut', () => {
+      console.log('disconnectTimeOut')
+      this.props.route.sendToLobby.call(this, true);
     })
 
   }
@@ -110,13 +115,16 @@ class Game extends React.Component {
   handleReadyToMoveOn() {
     socket.emit('ready to move on', {gameName: this.props.params.gamename, username: this.state.username});
   }
-        // {this.props.params.gamename}
+
+  handlePromptSubmission(prompt) {
+    socket.emit('prompt created', {gameName: this.props.params.gamename, prompt: prompt});
+  }
 
   render() {
     return (
       <div id="game">
         {this.state.game && this.state.username && this.state.game.gameStage === 'waiting' && <WaitingRoom game={this.state.game} user={this.state.username}/>}
-        {this.state.game && this.state.username && this.state.game.gameStage === 'playing' && <PlayingGame game={this.state.game} user={this.state.username} handleResponse={this.handleResponse} handleJudgeSelection={this.handleJudgeSelection} handleReadyToMoveOn={this.handleReadyToMoveOn}/>}
+        {this.state.game && this.state.username && this.state.game.gameStage === 'playing' && <PlayingGame game={this.state.game} user={this.state.username} handleResponse={this.handleResponse} handlePromptSubmission={this.handlePromptSubmission} handleJudgeSelection={this.handleJudgeSelection} handleReadyToMoveOn={this.handleReadyToMoveOn}/>}
         {this.state.game && this.state.username && this.state.game.gameStage === 'gameover' && <EndOfGame game={this.state.game} sendToLobby={this.props.route.sendToLobby}/>}
       </div>
     )

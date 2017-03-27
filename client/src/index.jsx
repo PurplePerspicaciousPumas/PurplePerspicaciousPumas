@@ -17,8 +17,12 @@ class App extends React.Component {
       this.sendToLobby = this.sendToLobby.bind(this);
     }
 
-    sendToLobby() {
-      hashHistory.push('/lobby');
+    sendToLobby(disconnectTimeOut) {
+      if (disconnectTimeOut) {
+        hashHistory.push('/lobby/:disconnectTimeOut');
+      } else {
+        hashHistory.push('/lobby');
+      }
     }
 
     sendToGame(gameName) {
@@ -30,7 +34,8 @@ class App extends React.Component {
         <div>
           <Router history={hashHistory}>
             <Route path="/" component={Home} sendToLobby={this.sendToLobby} handleSignUp={this.handleSignUp} handleLogIn={this.handleLogIn}/>
-            <Route path="/lobby" component={Lobby} sendToGame={this.sendToGame}/>
+            <Route path="/lobby" component={Lobby} sendToGame={this.sendToGame} disconnectTimeOut={this.state.disconnectTimeOut}/>
+            <Route path="/lobby/:disconnectTimeOut" component={Lobby} sendToGame={this.sendToGame} disconnectTimeOut={this.state.disconnectTimeOut}/>
             <Route path="/game/:gamename" component={Game} sendToLobby={this.sendToLobby}/>
           </Router>
         </div>

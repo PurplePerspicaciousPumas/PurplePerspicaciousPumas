@@ -103,6 +103,9 @@ var server = app.listen(port, function() {
 
 var io = require('socket.io')(server);
 
+var Sockets = {};
+var Rooms = {};
+
 io.on('connection', (socket) => {
   console.log('a user connected to the socket');
 
@@ -112,6 +115,10 @@ io.on('connection', (socket) => {
     socket.join(data.gameName);
     let username = data.username;
     let gameName = data.gameName;
+    Sockets[socket] = gameName;
+    console.log(Sockets[socket]);
+    Rooms[gameName] ? Rooms[gameName]++ : Rooms[gameName] = 1;
+    console.log(Rooms[gameName]);
     queries.retrieveGameInstance(gameName)
     .then(function (game){
     // add client to game DB if they're not already in players list
@@ -145,13 +152,30 @@ io.on('connection', (socket) => {
     })
   })
 
-  //TODO: write a helper function that retrieves a game instance obj given a name
-  // TODO: also write a helper for updating the game instance obj
+  socket.on('prompt created', (data) => {
+    let gameName = data.gameName;
+    let prompt = data.prompt;
 
-  // on 'submit response'
-    // first, grab game instance obj
-    // then check that username does not exist as index[1] of a response in responses array
-      // if username doesn't exist yet, then add response to DB
+    queries.retrieveGameInstance(gameName)
+    .then(function(game) {
+      let currentRound = game.currentRound;
+      let Rounds = game.rounds.slice(0);
+
+      Rounds[currentRound].prompt = prompt;
+      Rounds[currentRound].stage++;
+
+      queries.updateRounds(gameName, Rounds)
+      .then(function() {
+        queries.retrieveGameInstance(gameName)
+        .then(function(game) {
+          console.log('ADDED UPDATED GAME: ', game);
+          io.to(gameName).emit('prompt added', game);
+        })
+      })
+    })
+  })
+
+
   socket.on('submit response', (data) => {
     let gameName = data.gameName;
     let username = data.username;
@@ -241,20 +265,7 @@ io.on('connection', (socket) => {
       throw error;
     })
   })
-    // update game instance obj
-      // at currentRounds in rounds array, set winner to be the username (given as data)
-      // in same round, increment stage by 1 
-      // if currentRound is less than 3
-        // emit 'winner chosen' event with game instance obj as data
-      // otherwise
-        // emit 'game over' event with game instance obj
 
-  // on 'ready to move on', 
-    // retreive game instance obj
-    // check if rounds at current round ready already contains that username
-      // if not, add it to ready array 
-      // if there are now 4 ready, increment currentRound by 1 
-      // emit 'start next round' with game instance obj
   socket.on('ready to move on', (data) => {
     console.log('rdy');
     let gameName = data.gameName;
@@ -287,8 +298,37 @@ io.on('connection', (socket) => {
   })
 
 
-  socket.on('disconnect', () => {
-    console.log('a user disconnected');
+  socket.on('disconnect', (data) => {
+    if (Rooms[Sockets[socket]]) {
+      Rooms[Sockets[socket]]--;
+      let timer = 60;
+      var disconnectTimeOut = function() {
+        setTimeout(function(){
+          if (timer === 0 && Rooms[Sockets[socket]] < 4) {
+            console.log('disconnectTimeOut')
+            queries.setGameInstanceGameStageToGameOver(Sockets[socket])
+            .then(function(){
+              console.log(Sockets[socket]);
+                io.to(Sockets[socket]).emit('disconnectTimeOut');
+            })
+          } else {
+            if (Rooms[Sockets[socket]] < 4) {
+              console.log(timer);
+              timer = timer - 1;
+              disconnectTimeOut();
+            }
+          }
+        }, 1000);
+      }
+      queries.retrieveGameInstance(Sockets[socket])
+      .then(function(game) {
+        if (game.gameStage === 'playing') {
+          disconnectTimeOut();
+        }
+      });
+    }
+
+    console.log('a user disconnected', data);
   });
 });
 
