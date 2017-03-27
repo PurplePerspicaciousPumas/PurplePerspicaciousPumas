@@ -9,13 +9,6 @@ module.exports = {
     filename: 'bundle.js',
     path: DIST_DIR
   },
-  plugins: [
-    new webpack.DefinePlugin({
-      'process.env': {
-        LIVE_URL: process.env.LIVE_URL
-      }
-    })
-  ],
   module : {
     loaders : [
       {
@@ -27,5 +20,12 @@ module.exports = {
        }
       }
     ]
-  }
+  },
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env': {
+        LIVE_URL: process.env.LIVE_URL
+      }
+    })
+  ]
 };
