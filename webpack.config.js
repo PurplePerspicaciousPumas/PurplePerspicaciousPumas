@@ -12,9 +12,9 @@ module.exports = {
   plugins: [
     new webpack.DefinePlugin({
       'process.env': {
-        LIVE_URL: process.env.LIVE_URL,
+        LIVE_URL: process.env.LIVE_URL
       }
-    }),
+    })
   ],
   module : {
     loaders : [
