@@ -113,6 +113,7 @@ var io = require('socket.io')(server);
 
 var Sockets = {};
 var Rooms = {};
+var Users = {};
 
 io.on('connection', (socket) => {
   console.log('a user connected to the socket');
@@ -124,6 +125,8 @@ io.on('connection', (socket) => {
     let username = data.username;
     let gameName = data.gameName;
     Sockets[socket] = gameName;
+    User[socket] = username;
+    console.log(User[socket], ' joined')
     console.log(Sockets[socket]);
     Rooms[gameName] ? Rooms[gameName]++ : Rooms[gameName] = 1;
     console.log(Rooms[gameName]);
@@ -295,6 +298,9 @@ io.on('connection', (socket) => {
 
 
   socket.on('disconnect', (data) => {
+    if(User[socket]) {
+      console.log(User[socket], ' Left');
+    }
     if (Rooms[Sockets[socket]]) {
       Rooms[Sockets[socket]]--;
       let timer = 60;
@@ -309,7 +315,7 @@ io.on('connection', (socket) => {
             })
           } else {
             if (Rooms[Sockets[socket]] < 4) {
-              console.log(timer, Rooms[Sockets[socket]]);
+              console.log(timer, Sockets[socket], Rooms[Sockets[socket]]);
               timer = timer - 1;
               disconnectTimeOut();
             }
