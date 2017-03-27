@@ -1,3 +1,15 @@
+// var webpack = require('webpack'); //to access webpack runtime
+// var configuration = require('.././webpack.config.js');
+
+// let compiler = webpack(configuration);
+// compiler.apply(new webpack.process.env());
+// compiler.run(function(err, stats) {
+//   if (err) {
+//     console.log(err)
+//   } else {
+//     console.log(stats);
+//   }
+// });
 var express = require('express');
 var bodyParser = require('body-parser');
 var models = require('../db/index.js');

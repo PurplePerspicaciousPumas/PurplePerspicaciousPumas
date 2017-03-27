@@ -1,4 +1,4 @@
-
+var webpack = require('webpack');
 var path = require('path');
 var SRC_DIR = path.join(__dirname, '/client/src');
 var DIST_DIR = path.join(__dirname, '/client/dist');
@@ -9,6 +9,13 @@ module.exports = {
     filename: 'bundle.js',
     path: DIST_DIR
   },
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify(nodeEnv),
+      }
+    }),
+  ],
   module : {
     loaders : [
       {
@@ -20,12 +27,5 @@ module.exports = {
        }
       }
     ]
-  },
-  plugins: [
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify(nodeEnv),
-      }
-    }),
-  ]
+  }
 };
