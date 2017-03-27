@@ -1,3 +1,4 @@
+"use strict";
 import React from 'react';
 import GameListEntry from './GameListEntry.jsx';
 import { ListGroup } from 'react-bootstrap';

@@ -1,3 +1,4 @@
+"use strict";
 import React from 'react';
 import SignUp from './SignUp.jsx';
 import LogIn from './LogIn.jsx';

@@ -1,3 +1,4 @@
+"use strict";
 import React from 'react';
 import { Col, Panel } from 'react-bootstrap';
 

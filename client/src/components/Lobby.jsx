@@ -1,3 +1,4 @@
+"use strict";
 import React from 'react';
 import GameList from './GameList.jsx';
 import $ from 'jquery';

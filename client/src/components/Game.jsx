@@ -1,3 +1,4 @@
+"use strict";
 import React from 'react';
 import WaitingRoom from './WaitingRoom.jsx';
 import PlayingGame from './PlayingGame.jsx';

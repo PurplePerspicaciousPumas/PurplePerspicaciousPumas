@@ -1,3 +1,4 @@
+"use strict";
 import React from 'react';
 import { ListGroup, ListGroupItem, Col } from 'react-bootstrap';
 

@@ -1,3 +1,4 @@
+"use strict";
 import React from 'react';
 import $ from 'jquery';
 import { DropdownButton, MenuItem, Button, Form, FormGroup, Col, FormControl, ControlLabel, PageHeader } from 'react-bootstrap';
