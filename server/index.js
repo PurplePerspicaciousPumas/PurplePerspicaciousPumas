@@ -10,6 +10,7 @@ var User = models.userModel;
 var Game = models.gameInstanceModel;
 var queries = require('../db/db-queries.js');
 var helpers = require('./helpers.js');
+// var filter = require('filter');
 
 var app = express();
 var port = process.env.PORT || 3000;
