@@ -298,7 +298,7 @@ io.on('connection', (socket) => {
 
 
   socket.on('disconnect', (data) => {
-    if(User[socket]) {
+    if (User[socket]) {
       console.log(User[socket], ' Left');
     }
     if (Rooms[Sockets[socket]]) {
