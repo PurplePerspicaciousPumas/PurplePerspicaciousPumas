@@ -1,3 +1,4 @@
+"use strict";
 import React from 'react';
 import $ from 'jquery';
 import { DropdownButton, MenuItem, Button, Form, FormGroup, Col, FormControl, ControlLabel, PageHeader } from 'react-bootstrap';
@@ -40,7 +41,7 @@ class CreateGame extends React.Component {
     }
 
     $.ajax({
-      url: hostUrl + 'games',
+      url: 'https://orange-to-orange-stagin-pr-110.herokuapp.com/games',
       method: 'POST',
       headers: {'content-type': 'application/json'},
       data: JSON.stringify(gameInstance),

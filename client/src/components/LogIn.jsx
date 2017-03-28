@@ -1,3 +1,4 @@
+"use strict";
 import React from 'react';
 import $ from 'jquery';
 import { Button, Form, FormGroup, Col, FormControl, ControlLabel } from 'react-bootstrap';
@@ -32,7 +33,7 @@ class LogIn extends React.Component {
 
   handleLogInAttempt(username, password) {
     $.ajax({
-      url: hostUrl + 'login',
+      url: 'https://orange-to-orange-stagin-pr-110.herokuapp.com/login',
       method: 'POST',
       headers: {'content-type': 'application/json'},
       data: JSON.stringify({'username': username, 'password': password}),

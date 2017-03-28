@@ -1,3 +1,4 @@
+"use strict";
 import React from 'react';
 import Score from './PlayingGameComponents/Score.jsx';
 import GameWinner from './PlayingGameComponents/GameWinner.jsx';

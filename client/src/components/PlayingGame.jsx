@@ -1,3 +1,4 @@
+"use strict";
 import React from 'react';
 import Prompt from './PlayingGameComponents/Prompt.jsx';
 import CurrentJudge from './PlayingGameComponents/CurrentJudge.jsx';

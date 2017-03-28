@@ -1,3 +1,4 @@
+"use strict";
 import React from 'react';
 import WaitingRoom from './WaitingRoom.jsx';
 import PlayingGame from './PlayingGame.jsx';
@@ -80,7 +81,7 @@ class Game extends React.Component {
   getGameData(gameName) {
     // use gameName to retrieve gameInstance obj of that game
     $.ajax({
-      url: hostUrl + 'game',
+      url: 'https://orange-to-orange-stagin-pr-110.herokuapp.com/game',
       method: 'GET',
       headers: {'content-type': 'application/json'},
       data: {name: gameName},
@@ -95,7 +96,7 @@ class Game extends React.Component {
 
   getUsername() {
     $.ajax({
-      url: hostUrl + 'username',
+      url: 'https://orange-to-orange-stagin-pr-110.herokuapp.com/username',
       method: 'GET',
       headers: {'content-type': 'application/json'},
       success: (username) => {

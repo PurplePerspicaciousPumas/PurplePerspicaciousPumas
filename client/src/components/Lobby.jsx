@@ -1,3 +1,4 @@
+"use strict";
 import React from 'react';
 import GameList from './GameList.jsx';
 import $ from 'jquery';
@@ -27,7 +28,7 @@ class Lobby extends React.Component {
 
   getGames() {
     $.ajax({
-      url: hostUrl + 'games',
+      url: 'https://orange-to-orange-stagin-pr-110.herokuapp.com/games',
       method: 'GET',
       headers: {'content-type': 'application/json'},
       success: (data) => {
@@ -44,7 +45,7 @@ class Lobby extends React.Component {
 
   getUsername() {
     $.ajax({
-      url: hostUrl + 'username',
+      url: 'https://orange-to-orange-stagin-pr-110.herokuapp.com/username',
       method: 'GET',
       headers: {'content-type': 'application/json'},
       success: (username) => {
