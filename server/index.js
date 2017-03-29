@@ -163,8 +163,8 @@ io.on('connection', (socket) => {
             // create a new socket here?
               // countdown function here setTimeout and trigger a different state to render on the front end
 
-              let x = 7;
-              let onInt = function () {
+              var x = 7;
+              var onInt = function () {
                 io.to(gameName).emit('pregame', {'seconds': x, 'status': true});
                 x--;
                 if (x === 0) {
