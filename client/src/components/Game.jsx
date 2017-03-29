@@ -1,6 +1,7 @@
 'use strict';
 import React from 'react';
 import WaitingRoom from './WaitingRoom.jsx';
+import Pregame from './Pregame.jsx';
 import PlayingGame from './PlayingGame.jsx';
 import EndOfGame from './EndOfGame.jsx';
 import $ from 'jquery';
@@ -16,7 +17,9 @@ class Game extends React.Component {
     super(props)
     this.state = {
       game: null,
-      username: null
+      username: null,
+      pregame: null,
+      preGameStatus: null
     };
 
     this.getGameData = this.getGameData.bind(this);
@@ -29,7 +32,17 @@ class Game extends React.Component {
     socket.on('update waiting room', (gameObj) => {
       this.setState({game: gameObj});
     })
+
+    socket.on('pregame', (pregameObj) => {
+      console.log('being called')
+      this.setState({pregame: pregameObj.pregame});
+      console.log(this.state.pregame.x);
+      this.setState({status: pregameObj.status});
+      this.setState({preGameStatus: true})
+    })
+
     socket.on('start game', (gameObj) => {
+      this.setState({preGameStatus: false})
       this.setState({game: gameObj});
     })
     socket.on('prompt added', (gameObj) => {
@@ -110,11 +123,19 @@ class Game extends React.Component {
     socket.emit('prompt created', {gameName: this.props.params.gamename, prompt: prompt});
   }
 
+  preGaming(boolean) {
+    console.log('preGaming function is called')
+    this.setState({preGameStatus: false});
+  }
+        // {this.state.game && this.state.username && this.state.game.gameStage === 'waiting' && this.state.preGameStatus === true && <Pregame user={this.state.username} pregame={this.state.pregame} preGaming={this.preGaming}/>}
+
   render() {
     return (
       <div id="game">
-        {this.state.game && this.state.username && this.state.game.gameStage === 'waiting' && <WaitingRoom game={this.state.game} user={this.state.username}/>}
-        {this.state.game && this.state.username && this.state.game.gameStage === 'playing' && <PlayingGame game={this.state.game} user={this.state.username} handleResponse={this.handleResponse} handlePromptSubmission={this.handlePromptSubmission} handleJudgeSelection={this.handleJudgeSelection} handleReadyToMoveOn={this.handleReadyToMoveOn}/>}
+        {this.state.game && this.state.username && this.state.game.gameStage === 'waiting' && this.state.preGameStatus === null || true && <WaitingRoom game={this.state.game} user={this.state.username} pregame={this.state.pregame} preGameStatus = {this.state.preGameStatus}/>}
+
+
+        {this.state.game && this.state.username && this.state.game.gameStage === 'playing' && this.state.preGameStatus === false && <PlayingGame game={this.state.game} user={this.state.username} handleResponse={this.handleResponse} handlePromptSubmission={this.handlePromptSubmission} handleJudgeSelection={this.handleJudgeSelection} handleReadyToMoveOn={this.handleReadyToMoveOn}/>}
         {this.state.game && this.state.username && this.state.game.gameStage === 'gameover' && <EndOfGame game={this.state.game} sendToLobby={this.props.route.sendToLobby}/>}
       </div>
     )

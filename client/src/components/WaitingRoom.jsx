@@ -4,6 +4,12 @@ import Rules from './Rules.jsx';
 import { Col, PageHeader, ListGroup, ListGroupItem } from 'react-bootstrap';
 
 const WaitingRoom = (props) => (
+  props.preGameStatus === true ?
+
+  <div>Game begins in {props.pregame.x}</div>
+
+  :
+
   <Col id='waiting-room'>
   <PageHeader>{props.game.gameName} <small>Waiting Room</small></PageHeader>
     <h3>Number of Players: {props.game.players.length} / 4</h3>

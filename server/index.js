@@ -160,7 +160,31 @@ io.on('connection', (socket) => {
           return queries.retrieveGameInstance(gameName)
           .then(function (game) {
           // emit 'start game' event and send the game instance obj
-            io.to(gameName).emit('start game', game);
+            // create a new socket here?
+              // countdown function here setTimeout and trigger a different state to render on the front end
+
+              let x = 5;
+              let onInt = function () {
+                io.to(gameName).emit('pregame', {'pregame': x, 'status': true});
+                x--;
+                if (x === 0) {
+                  clearInterval(int);
+                  io.to(gameName).emit('start game', game);
+                }
+              };
+
+              let int = setInterval(onInt, 1000);
+
+              // let x = 5;
+              // int = setInterval(function () {
+              //   io.to(gameName).emit('pregame', 1000)
+              //   x--;
+              //   if (x === 0) {
+              //     clearInterval(int);
+              //     io.to(gameName).emit('start game', game);
+
+
+              // io.to(gameName).emit('start game', game);
           })
         });
       } else {
