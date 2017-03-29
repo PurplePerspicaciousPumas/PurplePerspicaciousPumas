@@ -7,32 +7,37 @@ class Pregame extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      secondsRemaining: this.props.pregame.x,
+      secondsRemaining: 5,
     }
-    this.handleChange = this.handleChange.bind(this);
+    this.tick = this.tick.bind(this);
   }
 
-  handleChange() {
-    this.props.preGaming(false);
+
+  tick() {
+    this.setState({secondsRemaining: this.state.secondsRemaining - 1});
+    if (this.state.secondsRemaining <= 0) {
+      clearInterval(this.interval);
+      this.props.gameTransition({seconds:0, status: false});
+    }
+  }
+
+  componentDidMount() {
+    this.setState({ secondsRemaining: this.props.pregame.seconds - 1});
+    this.interval = setInterval(this.tick, 1000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
   render () {
-    if (this.state.secondsRemaining === 0) {
-      console.log('being called at the Pregame component');
-      this.handleChange();
-    }
     return (
       <Col id='waiting-room'>
-      <PageHeader>{props.game.gameName} <small>Waiting Room</small></PageHeader>
+      <PageHeader>{this.props.game.gameName} <small>Waiting Room</small></PageHeader>
         <h3>Number of Players: 4 / 4</h3>
         <br />
         <div>Game starts in {this.state.secondsRemaining} seconds!</div>
-        <h4>Current Players:</h4>
-        <Col sm={4} smOffset={4}>
-          <ListGroup>
-            {props.game.players.map( (player) => <ListGroupItem>{player}</ListGroupItem>)}
-          </ListGroup>
-        </Col>
+
         <Col sm={6} smOffset={3}>
           <Rules/>
         </Col>
@@ -44,5 +49,7 @@ class Pregame extends React.Component {
 
 
 export default Pregame;
+
+
 
 

@@ -22,8 +22,8 @@ var gameInstanceSchema = new Schema({
   id: Number,
   gameName: {type: String, unique: true },
   password: String,
-  players: Array, 
-  rounds: Array, 
+  players: Array,
+  rounds: Array,
   currentRound: Number,
   gameStage: {type: String, default: 'waiting'}
 });
@@ -39,9 +39,9 @@ userSchema.plugin(passportLocalMongoose);
 var gameInstanceModel = mongoose.model('gameInstanceModel', gameInstanceSchema);
 
 //Comment this code back in to have access to the dummy data on your local machine
-// it was commented out for depoloyment. 
+// it was commented out for depoloyment.
 
-//Clearout database 
+//Clearout database
 // var collection = db.collection('gameinstancemodels');
 // collection.remove({});
 
