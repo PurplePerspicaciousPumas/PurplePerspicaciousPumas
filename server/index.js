@@ -25,6 +25,14 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(__dirname + '/../client/dist'));
 
+//setting up middleware to pre-flight check
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
+
 // passport config
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
@@ -39,7 +47,7 @@ app.post('/signup', function (req, res) {
     if (err) {
       console.log(err);
       return res.status(400).send(err);
-    } 
+    }
     passport.authenticate('local')(req, res, function() {
       res.status(201).send('created');
     })
@@ -101,12 +109,20 @@ app.get('/username', function(req, res) {
   res.status(200).send(user);
 });
 
+app.options('/login', function(req, res){
+  res.writeHead(200, {
+    'Access-Control-Allow-Origin':'*',
+    'Access-Control-Allow-Headers':'content-type'
+  })
+  res.end()
+});
+
 
 var server = app.listen(port, function() {
   console.log('App is listening on port: ', port);
 });
 
-//SOCKETS 
+//SOCKETS
 
 var io = require('socket.io')(server);
 
@@ -136,7 +152,7 @@ io.on('connection', (socket) => {
       return queries.retrieveGameInstance(gameName);
     }).then(function (game) {
     // then, check num of players in players list
-      // if it's 4 and gameStage is waiting 
+      // if it's 4 and gameStage is waiting
       if (game.players.length === 4 && game.gameStage === 'waiting') {
         // update gameStage in db from waiting to playing
         return queries.setGameInstanceGameStageToPlaying(gameName)
@@ -144,7 +160,31 @@ io.on('connection', (socket) => {
           return queries.retrieveGameInstance(gameName)
           .then(function (game) {
           // emit 'start game' event and send the game instance obj
-            io.to(gameName).emit('start game', game);
+            // create a new socket here?
+              // countdown function here setTimeout and trigger a different state to render on the front end
+
+              var x = 7;
+              var onInt = function () {
+                io.to(gameName).emit('pregame', {'seconds': x, 'status': true});
+                x--;
+                if (x === 0) {
+                  clearInterval(int);
+                  io.to(gameName).emit('start game', game);
+                }
+              };
+
+              let int = setInterval(onInt, 1000);
+
+              // let x = 5;
+              // int = setInterval(function () {
+              //   io.to(gameName).emit('pregame', 1000)
+              //   x--;
+              //   if (x === 0) {
+              //     clearInterval(int);
+              //     io.to(gameName).emit('start game', game);
+
+
+              // io.to(gameName).emit('start game', game);
           })
         });
       } else {
@@ -218,7 +258,7 @@ io.on('connection', (socket) => {
   })
 
 
-  // on 'judge selection' 
+  // on 'judge selection'
   socket.on('judge selection', (data) => {
     var gameName = data.gameName;
     var winner = data.winner;
@@ -249,7 +289,7 @@ io.on('connection', (socket) => {
       throw error;
     })
   })
-  // 
+  //
   socket.on('ready to move on', (data) => {
     var gameName = data.gameName;
     var username = data.username;
@@ -282,8 +322,8 @@ io.on('connection', (socket) => {
 
   // The commented out function is meant to be a way to handle disconnects
   // It requires some debugging to be functional, and is therefore currently
-  // commented out. When a user disconnects it should check every second 
-  // to see if the user has reconnected, but currently the count system 
+  // commented out. When a user disconnects it should check every second
+  // to see if the user has reconnected, but currently the count system
   // is not properly incrementing.
   socket.on('disconnect', (data) => {
     // if (Rooms[Sockets[socket]]) {
@@ -315,4 +355,3 @@ io.on('connection', (socket) => {
     console.log('a user disconnected', data);
   });
 });
-
