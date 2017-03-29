@@ -39,7 +39,6 @@ class Game extends React.Component {
       this.setState({pregame: preGameObj});
     })
 
-
     socket.on('start game', (gameObj) => {
       console.log('start game is called');
       this.setState({pregame: {seconds: 0, status: false}});
