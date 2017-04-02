@@ -153,7 +153,12 @@ app.get('/game', function(req, res) {
 
 app.get('/username', function(req, res) {
   var user = req.session.passport.user;
-  res.status(200).send(user);
+  // Make request to db to get this user's friends
+  UserQueries.selectUserByName(user)
+    .then(({username, friendList}) => {
+      console.log('Results', username, friendList);
+      res.status(200).send({username, friendList});
+    })
 });
 
 
@@ -169,6 +174,17 @@ const Games = {};
 const Sockets = {};
 const Rooms = {};
 let userSockets = {};
+
+// FIX: Covert to one object
+// {
+//   'craig': {
+//     socketId: 1231231,
+//     room: 'lobby'
+//   }
+// }
+// Overwrite socketId on reconnect
+
+const allUsers = {};
 const allConnectedUsers = {};
 const connectedLobbyUsers = {};
 let lobbyUsers = [];
@@ -212,6 +228,7 @@ io.on('connection', (socket) => {
     var username = data.username;
 
     // Overwrite if same user connected from a new socket
+    allUsers[username] = {socketId: socket.id, room: 'lobby'};
     allConnectedUsers[username] = connectedLobbyUsers[username] = socket.id;
     console.log('All users', allConnectedUsers);
     console.log('Users in lobby', connectedLobbyUsers);
@@ -223,6 +240,7 @@ io.on('connection', (socket) => {
     // Send current chat messages to any socket in the room
     io.to('lobby').emit('chat updated', lobbyChatMessages, console.log('Lobby users: ', lobbyUsers));
     io.to('lobby').emit('user joined lobby', lobbyUsers);
+    io.emit('ALL_USERS_UPDATED', allUsers);
 
     getAllGames((games) => {
       console.log('Sending games to user');
@@ -408,8 +426,10 @@ ROUND STARTING TIMER
                 console.log('Sending games to lobby');
                 io.to('lobby').emit('update games', {games: games})
               })
-            ).catch(err => console.log(err));
+            )
+            .catch(err => console.log(err));
         }
+
         console.log(`${username} is leaving room: ${gameName}`);
         socket.leave(gameName);
       })

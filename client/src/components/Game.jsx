@@ -77,7 +77,7 @@ class Game extends React.Component {
 
   }
 
-  componentDidMount() {
+  componentWillMount() {
     // Get game name from the route url params
     // Sends GET request to current server
     this.getGameData(this.props.params.gamename);

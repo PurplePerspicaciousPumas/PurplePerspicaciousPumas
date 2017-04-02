@@ -2,8 +2,8 @@
 import React from 'react';
 import GameList from './GameList.jsx';
 import $ from 'jquery';
+import axios from 'axios';
 import CreateGame from './CreateGame.jsx';
-import YourGames from './YourGames.jsx';
 import PlayerDisconnected from './PlayerDisconnected.jsx'
 import { Button, Form, FormGroup, Panel, ListGroup, ListGroupItem, Col, FormControl, ControlLabel, PageHeader } from 'react-bootstrap';
 var Filter = require('bad-words');
@@ -16,30 +16,48 @@ class Lobby extends React.Component {
   constructor(props) {
     super(props)
 
-    console.log(this.props);
+    console.log('PROPS: ', this.props);
 
     this.state = {
       games: null,
       username: null,
       chatroom: [],
+      allUsers: [],
       lobbyUsers: [],
+      lobby: {},
+      friends: {},
       value: '',
       private: 0,
       addFriend: false,
       friendName: ''
     };
 
-
     this.props.route.ioSocket.on('chat updated', messages => {
       this.setState({chatroom: messages});
       console.log('Current client side chat: ', this.state.chatroom);
     });
-
     this.props.route.ioSocket.on('user joined lobby', userList => {
       console.log(userList);
       this.setState({lobbyUsers: userList});
       console.log('Current lobby users: ', this.state.lobbyUsers);
     });
+    this.props.route.ioSocket.on('get games', (data) => {
+      console.log(data.games);
+      this.setState({games: data.games});
+    });
+    this.props.route.ioSocket.on('update games', (data) => {
+      console.log('Updating games from socket', data.games);
+      this.setState({games: data.games});
+    });
+    this.props.route.ioSocket.on('ALL_USERS_UPDATED', data => {
+      console.log('All users received', data);
+      let currentUsers = [];
+      for (let user in data) {
+        if (data[user].room === 'lobby') {
+
+        }
+      }
+    })
 
     this.getGames = this.getGames.bind(this);
     this.sendMessageToChatroom = this.sendMessageToChatroom.bind(this);
@@ -50,55 +68,32 @@ class Lobby extends React.Component {
     this.handleAddFriendByInputName = this.handleAddFriendByInputName.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
-
-    this.props.route.ioSocket.on('get games', (data) => {
-      console.log(data.games);
-      this.setState({games: data.games});
-    });
-
-    this.props.route.ioSocket.on('update games', (data) => {
-      console.log(data.games);
-      this.setState({games: data.games});
-    });
-
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.getGames();
     this.getUsername();
   }
 
   getGames() {
-    $.ajax({
-      url: '/games',
-      method: 'GET',
-      headers: {'content-type': 'application/json'},
-      success: (data) => {
+    axios.get('/games')
+      .then(data => {
         console.log('got games: ', data);
-        this.setState({
-          games: data
-        })
-      },
-      error: (err) => {
-        console.log('error getting games: ', err);
-      }
-    });
+        this.setState({games: data.data})
+      })
+      .catch(err => console.log('error getting games: ', err))
   }
 
   getUsername() {
-    $.ajax({
-      url: '/username',
-      method: 'GET',
-      headers: {'content-type': 'application/json'},
-      success: (username) => {
+    axios.get('/username')
+      .then(data => {
+        let username = data.data.username;
+        let friendList = data.data.friendList;
         this.setState({username: username}, function() {
           this.props.route.ioSocket.emit('join lobby', {username: this.state.username});
         });
-      },
-      error: (err) => {
-        console.log('error getting username', err);
-      }
-    });
+      })
+      .catch(error => console.log('error getting username', error))
   }
 
   handleMessageChange(event) {
@@ -205,7 +200,7 @@ class Lobby extends React.Component {
 
     let addFriend = (
       <Form inline>
-        <FormControl type="text" placeholder="Edward" onChange={this.handleInputChange} />
+        <FormControl type="text" placeholder="Type your friend's username" onChange={this.handleInputChange} />
       <Button type="submit" onClick={this.handleAddFriendByInputName}>Add</Button>
       </Form>
     );
