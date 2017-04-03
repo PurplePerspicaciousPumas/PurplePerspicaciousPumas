@@ -11,12 +11,9 @@ var filter = new Filter();
 
 // TODO: build logic to prevent users from joining a full game
 
-
 class Lobby extends React.Component {
   constructor(props) {
-    super(props)
-
-    console.log('PROPS: ', this.props);
+    super(props);
 
     this.state = {
       games: null,
@@ -51,13 +48,7 @@ class Lobby extends React.Component {
     });
     this.props.route.ioSocket.on('ALL_USERS_UPDATED', data => {
       console.log('All users received', data);
-      let currentUsers = [];
-      for (let user in data) {
-        if (data[user].room === 'lobby') {
-
-        }
-      }
-    })
+    });
 
     this.getGames = this.getGames.bind(this);
     this.sendMessageToChatroom = this.sendMessageToChatroom.bind(this);
@@ -102,10 +93,10 @@ class Lobby extends React.Component {
   }
 
   handleGameCreationChoice(event) {
-    if(event.target.value === "ordinary") {
+    if (event.target.value === "ordinary") {
       this.setState({private: 1});
-    } else if(event.target.value === "private") {
-      this.setState({private : -1});
+    } else if (event.target.value === "private") {
+      this.setState({private: -1});
     }
   }
 
@@ -113,13 +104,6 @@ class Lobby extends React.Component {
     this.setState({private: 0});
   }
 
-  handleAddFriendByClick(event) {
-    if (event !== this.state.username) {
-      this.addToFriendList(event, this.state.username, false);
-    } else {
-      alert('Sorry, you can\'t add yourself.');
-    }
-  }
 
   addToFriendList(friend, currentUser, typedIn) {
     axios.post('/friends', {friend: friend, username: currentUser, typedIn: typedIn})
@@ -132,9 +116,19 @@ class Lobby extends React.Component {
     this.setState(prevState => ({addFriend: !prevState.addFriend}));
   }
 
+  handleAddFriendByClick(event) {
+    if (event !== this.state.username) {
+      this.addToFriendList(event, this.state.username, false);
+    } else {
+      alert('Sorry, you can\'t add yourself.');
+    }
+  }
+
   handleAddFriendByInputName(event) {
     event.preventDefault();
     this.addToFriendList(this.state.friendName, this.state.username, true);
+    this.showFriendNameInput();
+    this.setState({value: ''});
   }
 
   handleInputChange(event) {
@@ -167,14 +161,14 @@ class Lobby extends React.Component {
       mainPanel = <CreateGame username={this.state.username} sendToGame={this.props.route.sendToGame} private={true} handlePrivateState={this.handlePrivateState}/>;
     }
 
-    let header = (<span>
+    const lobbyUsersHeader = (<span>
       <span>Users in Chat</span>
       {"    "}
       <Button bsSize="xsmall" bsStyle="info" onClick={this.showFriendNameInput}>Add a friend by name
       </Button>
     </span>);
 
-    let addFriend = (
+    const addFriend = (
       <Form inline>
         <FormControl type="text" placeholder="Type your friend's username" onChange={this.handleInputChange} />
       <Button type="submit" onClick={this.handleAddFriendByInputName}>Add</Button>
@@ -196,7 +190,7 @@ class Lobby extends React.Component {
         </Panel>
         {"             "}
 
-        <Panel header={header} bsStyle="primary">
+        <Panel header={lobbyUsersHeader} bsStyle="primary">
           {this.state.lobbyUsers.map(user => (<div><span>{user}</span> <Button value={user} onClick={() => this.handleAddFriendByClick(user)} >Add friend</Button></div>))}
           {this.state.addFriend ? addFriend : null}
         </Panel>
