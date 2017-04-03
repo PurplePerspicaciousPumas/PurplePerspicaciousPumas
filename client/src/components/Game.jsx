@@ -115,16 +115,10 @@ class Game extends React.Component {
 
   leaveGame() {
     let currentPlayers = this.state.game.players.length;
+    let exitGameChoice = confirm('You are the only player. Are you sure you want to destroy this game?');
+    this.props.route.ioSocket.emit('leave game', {gameName: this.props.params.gamename, username: this.state.username});
 
-    if (currentPlayers === 1) {
-      let exitGameChoice = confirm('You are the only player. Are you sure you want to destroy this game?');
-      if (exitGameChoice) {
-        this.props.route.ioSocket.emit('leave game', {gameName: this.props.params.gamename, username: this.state.username});
-      }
-
-    } else {
-      this.props.route.ioSocket.emit('leave game', {gameName: this.props.params.gamename, username: this.state.username});
-    }
+    return exitGameChoice;
   }
 
   sendMessageToChatroom(message) {

@@ -406,9 +406,13 @@ ROUND STARTING TIMER
         }
       })
       .then(game => {
+        console.log('players in game destroyed ', game.value.players.length);
         if (game.value.players.length > 0) {
           io.to(gameName).emit('update waiting room', game.value)
           getAllGames((games) => {
+
+            console.log(`${username} is leaving room: ${gameName}`);
+            socket.leave(gameName);
             console.log('Sending games to individual socket');
             io.to(socket.id).emit('get games', {games: games})
           });
@@ -417,6 +421,8 @@ ROUND STARTING TIMER
           queries.destroyGameInstance(gameName)
             .then(
               getAllGames(games => {
+                console.log(`${username} is leaving room: ${gameName}`);
+                socket.leave(gameName);
                 console.log('Sending games to lobby');
                 io.to('lobby').emit('update games', {games: games})
               })
@@ -424,8 +430,8 @@ ROUND STARTING TIMER
             .catch(err => console.log(err));
         }
 
-        console.log(`${username} is leaving room: ${gameName}`);
-        socket.leave(gameName);
+        // console.log(`${username} is leaving room: ${gameName}`);
+        // socket.leave(gameName);
       })
       .catch(error => console.log(error))
   });

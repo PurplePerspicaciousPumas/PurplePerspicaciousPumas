@@ -42,7 +42,7 @@ class Lobby extends React.Component {
       this.setState({games: data.games});
     });
     this.props.route.ioSocket.on('update games', (data) => {
-      console.log('Updating games from socket', data.games);
+      console.log('Updating games from manager', data.games);
       this.setState({games: data.games});
     });
     this.props.route.ioSocket.on('ALL_USERS_UPDATED', data => {
