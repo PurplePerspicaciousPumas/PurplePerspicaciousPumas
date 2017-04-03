@@ -155,21 +155,14 @@ class Lobby extends React.Component {
   }
 
   handleLogout() {
-    console.log(this.state.username);
     let logoutFunc = this.props.route.sendToHomePage;
-    this.props.route.ioSocket.emit('leave lobby', this.state);
 
-    $.ajax({
-      url: '/logout',
-      method: 'GET',
-      headers: {'content-type': 'application/json'},
-      success: data => {
-        logoutFunc();
-      },
-      error: (err) => {
-        console.log('error logging out: ', err);
-      }
-    });
+    this.props.route.ioSocket.emit('leave lobby', this.state,
+      axios.get('/logout')
+        .then(data => logoutFunc())
+        .catch(error => console.log(`Error logging out ${error}`)
+      )
+    );
   }
 
   render() {
