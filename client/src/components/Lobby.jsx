@@ -71,18 +71,17 @@ class Lobby extends React.Component {
   }
 
   componentWillMount() {
-    this.getGames();
-    this.getUsername();
+    this.getGames().then(this.getUsername());
   }
 
   getGames() {
-    axios.get('/games')
+    return axios.get('/games')
       .then(data => this.setState({games: data.data}))
       .catch(err => console.log('error getting games: ', err))
   }
 
   getUsername() {
-    axios.get('/username')
+    return axios.get('/username')
       .then(data => {
         const {username, friendList} = data.data;
         console.log('Friend list: ', friendList);
