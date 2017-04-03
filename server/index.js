@@ -205,14 +205,14 @@ var getAllGames = function(callback) {
 io.on('connection', (socket) => {
   console.log(`A user connected to the socket`);
 
-  // DISCONNECT
-  // socket.on('disconnect', data => {
-  //   console.log('Someone disconnected!');
-  //   let username = userSockets[socket.id];
-  //   delete userSockets[socket.id];
-  //   lobbyUsers = lobbyUsers.filter(user => user !== username);
-  //   io.to('lobby').emit('user joined lobby', lobbyUsers);
-  // })
+  // DISCONNECT OR LOGOUT
+  socket.on('disconnect', data => {
+    console.log('Someone disconnected!');
+    let username = userSockets[socket.id];
+    delete userSockets[socket.id];
+    lobbyUsers = lobbyUsers.filter(user => user !== username);
+    io.to('lobby').emit('user joined lobby', lobbyUsers);
+  })
 
   // LOBBY
   socket.on('join lobby', data => {
@@ -247,9 +247,10 @@ io.on('connection', (socket) => {
     socket.leave('lobby');
 
     delete connectedLobbyUsers[data.username];
-    //delete allUsers[data.username];
+    delete allUsers[data.username];
 
     lobbyUsers = Object.keys(connectedLobbyUsers)
+    console.log('lobby users is now: ', lobbyUsers, allUsers);
     io.emit('ALL_USERS_UPDATED', allUsers);
     io.to('lobby').emit('user joined lobby', lobbyUsers);
   });
