@@ -122,27 +122,14 @@ class Lobby extends React.Component {
   }
 
   addToFriendList(friend, currentUser, typedIn) {
-    $.ajax({
-      url: '/friends',
-      method: 'POST',
-      headers: {'content-type': 'application/json'},
-      data: JSON.stringify({"friend": friend, "username": currentUser, "typedIn": typedIn}),
-      success: (data) => {
-        alert('Friend added!');
-      },
-      error: (err) => {
-        if (err.responseText) {
-          alert(err.responseText);
-        } else {
-          console.log('error adding friend', err);
-        }
-      }
-    });
+    axios.post('/friends', {friend: friend, username: currentUser, typedIn: typedIn})
+      .then(data => alert('Friend added!'))
+      .catch(error => error.responseText ? alert(error.responseText) : alert(`Error adding friend! ${error}`))
   }
 
   showFriendNameInput() {
     //toggle a flag here to showup the form
-    this.setState( prevState => ({addFriend: !prevState.addFriend}));
+    this.setState(prevState => ({addFriend: !prevState.addFriend}));
   }
 
   handleAddFriendByInputName(event) {
