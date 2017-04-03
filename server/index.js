@@ -207,12 +207,15 @@ io.on('connection', (socket) => {
 
   // DISCONNECT OR LOGOUT
   socket.on('disconnect', data => {
-    console.log('Someone disconnected!');
-    let username = userSockets[socket.id];
-    delete userSockets[socket.id];
-    delete allUsers[username];
-    lobbyUsers = lobbyUsers.filter(user => user !== username);
-    io.to('lobby').emit('user joined lobby', lobbyUsers);
+    console.log(`Someone disconnected! ${socket.id}`);
+
+    for (let user in allUsers) {
+      if (allUsers[user].socketId === socket.id) {
+        delete allUsers[user];
+      }
+    }
+
+    io.emit('ALL_USERS_UPDATED', allUsers);
   })
 
   // LOBBY
