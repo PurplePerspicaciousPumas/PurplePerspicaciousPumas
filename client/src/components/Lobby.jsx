@@ -157,13 +157,13 @@ class Lobby extends React.Component {
     // Create new array of objects with current Friend's status of online or offline
     let results = allFriends.reduce((list, friend) => {
       if (allCurrentUsers[friend]) {
-        list[friend] = 'online';
+        list.push([friend, allCurrentUsers[friend].room])
       } else {
-        list[friend] = 'offline';
+        list.push([friend, 'offline'])
       }
 
       return list;
-    }, {});
+    }, []);
 
     console.log('Friend list with status', results);
     this.setState({friendsList: results});
@@ -209,7 +209,7 @@ class Lobby extends React.Component {
         {mainPanel}
 
         <Panel header="Friends" bsStyle="primary">
-          {this.state.friendList.map(friend => <p>{friend}</p>)}
+          {this.state.friendsList.map(friend => <p>{friend[0]} :: {friend[1]}</p>)}
         </Panel>
         {"             "}
 

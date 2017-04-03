@@ -245,8 +245,12 @@ io.on('connection', (socket) => {
   socket.on('leave lobby', data => {
     console.log(`${data.username} left the lobby!`);
     socket.leave('lobby');
+
     delete connectedLobbyUsers[data.username];
+    //delete allUsers[data.username];
+
     lobbyUsers = Object.keys(connectedLobbyUsers)
+    io.emit('ALL_USERS_UPDATED', allUsers);
     io.to('lobby').emit('user joined lobby', lobbyUsers);
   });
 
