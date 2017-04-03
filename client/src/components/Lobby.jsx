@@ -155,7 +155,6 @@ class Lobby extends React.Component {
 
   updateFriendsListStatus(allCurrentUsers, allFriends) {
     // Create new array of objects with current Friend's status of online or offline
-    debugger;
     let results = allFriends.reduce((list, friend) => {
       if (allCurrentUsers[friend]) {
         list[friend] = 'online';

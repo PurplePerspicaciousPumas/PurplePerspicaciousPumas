@@ -4,6 +4,7 @@ import WaitingRoom from './WaitingRoom.jsx';
 import PlayingGame from './PlayingGame.jsx';
 import EndOfGame from './EndOfGame.jsx';
 import $ from 'jquery';
+import axios from 'axios';
 import io from 'socket.io-client';
 import { Col, PageHeader, Panel, ListGroup, ListGroupItem } from 'react-bootstrap';
 
@@ -102,19 +103,12 @@ class Game extends React.Component {
   }
 
   getUsername() {
-    $.ajax({
-      url: '/username',
-      method: 'GET',
-      headers: {'content-type': 'application/json'},
-      success: (username) => {
-        this.setState({username: username}, function() {
-          this.props.route.ioSocket.emit('join game', {gameName: this.props.params.gamename, username: this.state.username});
-        });
-      },
-      error: (err) => {
-        console.log('error getting username', err);
-      }
-    });
+    return axios.get('/username')
+      .then(data => {
+        let {username} = data.data;
+        this.setState({username: username});
+      })
+      .catch(error => console.log('error getting username', error))
   }
 
   leaveGame() {
