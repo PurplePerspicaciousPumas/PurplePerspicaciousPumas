@@ -203,13 +203,14 @@ var getAllGames = function(callback) {
 
 
 io.on('connection', (socket) => {
-  console.log(`A user connected to the socket`);
+  console.log(`A user connected: ${socket.id}`);
 
   // DISCONNECT OR LOGOUT
   socket.on('disconnect', data => {
     console.log('Someone disconnected!');
     let username = userSockets[socket.id];
     delete userSockets[socket.id];
+    delete allUsers[username];
     lobbyUsers = lobbyUsers.filter(user => user !== username);
     io.to('lobby').emit('user joined lobby', lobbyUsers);
   })

@@ -34,7 +34,6 @@ class Lobby extends React.Component {
       console.log('Current client side chat: ', this.state.chatroom);
     });
     this.props.route.ioSocket.on('user joined lobby', userList => {
-      console.log(userList);
       this.setState({lobbyUsers: userList});
       console.log('Current lobby users: ', this.state.lobbyUsers);
     });
@@ -166,7 +165,21 @@ class Lobby extends React.Component {
     }, []);
 
     console.log('Friend list with status', results);
-    this.setState({friendsList: results});
+    this.setState({friendsList: results}, this.updateLobbyUsers(allCurrentUsers));
+  }
+
+  updateLobbyUsers(users) {
+    let results = [];
+    console.log('All users', users);
+    for (let user in users) {
+      if (users[user].room === 'lobby') {
+        console.log(user);
+        results.push(user);
+      }
+    }
+
+    console.log('Results!', results);
+    this.setState({lobbyUsers: results});
   }
 
   render() {
