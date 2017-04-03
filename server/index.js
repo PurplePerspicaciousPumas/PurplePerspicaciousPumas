@@ -32,6 +32,8 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+
+// ROUTES
 app.post('/signup', function (req, res) {
   User.register(new User({username: req.body.username, email: req.body.email}), req.body.password, function (err, user) {
     if (err) {
@@ -74,7 +76,6 @@ app.get('/games', function(req, res) {
   })
 });
 
-//add to friendlist:
 app.post('/friends', function(req, res) {
    if (req.body.typedIn) {
     UserQueries.selectUserByName(req.body.friend)
@@ -156,7 +157,7 @@ var server = app.listen(port, function() {
   console.log('App is listening on port: ', port);
 });
 
-//SOCKETS
+// SOCKETS
 var io = require('socket.io')(server);
 
 
@@ -205,13 +206,13 @@ io.on('connection', (socket) => {
   console.log(`A user connected to the socket`);
 
   // DISCONNECT
-  socket.on('disconnect', data => {
-    console.log('Someone disconnected!');
-    let username = userSockets[socket.id];
-    delete userSockets[socket.id];
-    lobbyUsers = lobbyUsers.filter(user => user !== username);
-    io.to('lobby').emit('user joined lobby', lobbyUsers);
-  })
+  // socket.on('disconnect', data => {
+  //   console.log('Someone disconnected!');
+  //   let username = userSockets[socket.id];
+  //   delete userSockets[socket.id];
+  //   lobbyUsers = lobbyUsers.filter(user => user !== username);
+  //   io.to('lobby').emit('user joined lobby', lobbyUsers);
+  // })
 
   // LOBBY
   socket.on('join lobby', data => {
@@ -220,8 +221,6 @@ io.on('connection', (socket) => {
     // Overwrite if same user connected from a new socket
     allUsers[username] = {socketId: socket.id, room: 'lobby'};
     allConnectedUsers[username] = connectedLobbyUsers[username] = socket.id;
-    console.log('All users', allConnectedUsers);
-    console.log('Users in lobby', connectedLobbyUsers);
 
     socket.join('lobby', console.log(`${username} has joined the lobby!`));
 
@@ -239,22 +238,15 @@ io.on('connection', (socket) => {
   });
 
   socket.on('leave lobby', data => {
-    console.log('Someone left the lobby', data.username);
+    console.log(`${data.username} left the lobby!`);
     socket.leave('lobby');
-
-    console.log('Lobby before', lobbyUsers);
     delete connectedLobbyUsers[data.username];
     lobbyUsers = Object.keys(connectedLobbyUsers)
-
-
     io.to('lobby').emit('user joined lobby', lobbyUsers);
-    console.log('Lobby after someone left is', lobbyUsers);
   });
 
   socket.on('message', (data) => {
-    console.log('Message received: ', data);
     lobbyChatMessages.push(data);
-    console.log('Current chat: ', lobbyChatMessages);
     io.to('lobby').emit('chat updated', lobbyChatMessages);
   });
 
@@ -324,10 +316,6 @@ LOGIC TO CREATE COUNTDOWN BEFORE GAME STARTS
                 }, 1500)
               }
             }, 1000)
-/*************************************************************
-THIS WORKS FINE!
-**************************************************************/
-
           });
       } else {
         console.log('Joining Game: ', game.value);
