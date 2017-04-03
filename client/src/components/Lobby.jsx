@@ -25,7 +25,7 @@ class Lobby extends React.Component {
       allUsers: [],
       lobbyUsers: [],
       lobby: {},
-      friends: {},
+      friendList: [],
       value: '',
       private: 0,
       addFriend: false,
@@ -77,19 +77,16 @@ class Lobby extends React.Component {
 
   getGames() {
     axios.get('/games')
-      .then(data => {
-        console.log('got games: ', data);
-        this.setState({games: data.data})
-      })
+      .then(data => this.setState({games: data.data}))
       .catch(err => console.log('error getting games: ', err))
   }
 
   getUsername() {
     axios.get('/username')
       .then(data => {
-        let username = data.data.username;
-        let friendList = data.data.friendList;
-        this.setState({username: username}, function() {
+        const {username, friendList} = data.data;
+        console.log('Friend list: ', friendList);
+        this.setState({username: username, friendList: friendList}, function() {
           this.props.route.ioSocket.emit('join lobby', {username: this.state.username});
         });
       })
@@ -215,13 +212,17 @@ class Lobby extends React.Component {
 
         {mainPanel}
 
-        <input placeholder="Type here..." value={this.state.value} onChange={this.handleMessageChange}/>
-        <button onClick={() => this.sendMessageToChatroom(this.state.value)}>Send</button>
+        <Panel header="Friends" bsStyle="primary">
+          {this.state.friendList.map(friend => <p>{friend}</p>)}
+        </Panel>
         {"             "}
+
         <Panel header={header} bsStyle="primary">
           {this.state.lobbyUsers.map(user => (<div><span>{user}</span> <Button value={user} onClick={() => this.handleAddFriendByClick(user)} >Add friend</Button></div>))}
           {this.state.addFriend ? addFriend : null}
         </Panel>
+        <input placeholder="Type here..." value={this.state.value} onChange={this.handleMessageChange}/>
+        <button onClick={() => this.sendMessageToChatroom(this.state.value)}>Send</button>
         <Panel header="Lobby Chat" bsStyle="primary">
           {this.state.chatroom.map(message => <p>{message.username}: {message.message}</p>)}
         </Panel>
