@@ -115,7 +115,7 @@ app.get('/logout', function(req, res) {
 
 app.post('/games', function(req, res) {
   var gameInstance = req.body;
-  console.log(req.body);
+  console.log('Games post req', req.body);
   console.log('Game Instance: ', gameInstance);
 
   helpers.addPrompts(gameInstance);
