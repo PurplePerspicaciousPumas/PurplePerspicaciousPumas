@@ -76,42 +76,32 @@ app.get('/games', function(req, res) {
 
 //add to friendlist:
 app.post('/friends', function(req, res) {
-   console.log(req.body);
-   //if user typed in the friend name
-     //check if the name typed in exist in the database
-     //if yes, check if it's the user itself
-       //if not self, add to friendlist
-     //if no, send back an error code to front-end
    if (req.body.typedIn) {
     UserQueries.selectUserByName(req.body.friend)
-    .then((data) => {
-      console.log('this is the selected data: ', data);
-      if (!data) {
-        //
-        res.status(400).send('This person doesn\'t exist!');
-      } else {
-        //
-        UserQueries.addFriendToList(req.body.friend, req.body.username)
-        .then(() => {
-          res.status(201).send('successfully added friend');
-        })
-        .catch((err) => {
-          res.status(400).send('Uh oh, there\'s an error adding friend');
-        });
-      }
-    })
-    .catch(err => {
-      res.status(400).send('Uh oh, an error occured!');
-    });
+      .then((data) => {
+        if (!data) {
+          res.status(400).send('This person doesn\'t exist!');
+        } else {
+          UserQueries.addFriendToList(req.body.friend, req.body.username)
+            .then(data => {
+              res.status(201).send(data.value.friendList);
+            })
+          .catch((err) => {
+            res.status(400).send('Uh oh, there\'s an error adding friend');
+          });
+        }
+      })
+      .catch(err => {
+        res.status(400).send('Uh oh, an error occured!');
+      });
    } else {
-
     UserQueries.addFriendToList(req.body.friend, req.body.username)
-    .then(() => {
-      res.status(201).send('successfully added friend');
-    })
-    .catch((err) => {
-      res.status(400).send('Uh oh, there\'s an error adding friend');
-    });
+      .then(data => {
+        res.status(201).send(data.value.friendList);
+      })
+      .catch((err) => {
+        res.status(400).send('Uh oh, there\'s an error adding friend');
+      });
    }
 });
 

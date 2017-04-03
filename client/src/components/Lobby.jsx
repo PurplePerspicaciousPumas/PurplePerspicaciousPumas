@@ -74,7 +74,10 @@ class Lobby extends React.Component {
   getUsername() {
     return axios.get('/username')
       .then(data => {
-        const {username, friendList} = data.data;
+        let {username, friendList} = data.data;
+        if (!friendList) {
+          friendList = [];
+        }
         console.log('Friend list: ', friendList);
         this.setState({username: username, friendList: friendList}, function() {
           this.props.route.ioSocket.emit('join lobby', {username: this.state.username});
@@ -107,7 +110,10 @@ class Lobby extends React.Component {
 
   addToFriendList(friend, currentUser, typedIn) {
     axios.post('/friends', {friend: friend, username: currentUser, typedIn: typedIn})
-      .then(data => alert('Friend added!'))
+      .then(response => {
+        alert('Friend added!');
+        this.setState({friendList: response.data});
+      })
       .catch(error => error.responseText ? alert(error.responseText) : alert(`Error adding friend! ${error}`))
   }
 
