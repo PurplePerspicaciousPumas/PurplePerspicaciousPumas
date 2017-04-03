@@ -21,8 +21,8 @@ class Lobby extends React.Component {
       chatroom: [],
       allUsers: [],
       lobbyUsers: [],
-      lobby: {},
       friendList: [],
+      friendsList: [],
       value: '',
       private: 0,
       addFriend: false,
@@ -48,6 +48,7 @@ class Lobby extends React.Component {
     });
     this.props.route.ioSocket.on('ALL_USERS_UPDATED', data => {
       console.log('All users received', data);
+      this.setState({allUsers: data}, this.updateFriendsListStatus(data, this.state.friendList));
     });
 
     this.getGames = this.getGames.bind(this);
@@ -150,6 +151,23 @@ class Lobby extends React.Component {
         .catch(error => console.log(`Error logging out ${error}`)
       )
     );
+  }
+
+  updateFriendsListStatus(allCurrentUsers, allFriends) {
+    // Create new array of objects with current Friend's status of online or offline
+    debugger;
+    let results = allFriends.reduce((list, friend) => {
+      if (allCurrentUsers[friend]) {
+        list[friend] = 'online';
+      } else {
+        list[friend] = 'offline';
+      }
+
+      return list;
+    }, {});
+
+    console.log('Friend list with status', results);
+    this.setState({friendsList: results});
   }
 
   render() {

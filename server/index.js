@@ -219,7 +219,12 @@ io.on('connection', (socket) => {
     var username = data.username;
 
     // Overwrite if same user connected from a new socket
-    allUsers[username] = {socketId: socket.id, room: 'lobby'};
+    if (allUsers[username]) {
+      Object.assign(allUsers[username], {socketId: socket.id, room: 'lobby'});
+    } else {
+      allUsers[username] = {socketId: socket.id, room: 'lobby'};
+    }
+
     allConnectedUsers[username] = connectedLobbyUsers[username] = socket.id;
 
     socket.join('lobby', console.log(`${username} has joined the lobby!`));
@@ -265,6 +270,8 @@ io.on('connection', (socket) => {
 
     console.log(`${username} is joining room: ${gameName}`);
     socket.join(gameName);
+    allUsers[username] = Object.assign({room: gameName});
+    io.emit('ALL_USERS_UPDATED', allUsers);
 
     Sockets[socket] = gameName;
     console.log(`Sockets: ${Sockets[socket]}`);
