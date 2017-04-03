@@ -113,21 +113,6 @@ class Game extends React.Component {
       .catch(error => console.log('error getting username', error))
   }
 
-    //   $.ajax({
-    //     url: '/username',
-    //     method: 'GET',
-    //     headers: {'content-type': 'application/json'},
-    //     success: (username) => {
-    //       this.setState({username: username}, function() {
-    //         this.props.route.ioSocket.emit('join game', {gameName: this.props.params.gamename, username: this.state.username});
-    //       });
-    //     },
-    //     error: (err) => {
-    //       console.log('error getting username', err);
-    //     }
-    //   });
-    // }
-
   leaveGame() {
     let currentPlayers = this.state.game.players.length;
 
